@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sramik_app/core/constants/app_colors.dart';
 import 'package:sramik_app/features/auth/presentation/screens/splash_screen.dart';
 import 'package:sramik_app/features/worker/presentation/screens/worker_home_screen.dart';
-import 'package:sramik_app/features/contractor/presentation/screens/contractor_home_screen.dart';
+import 'package:sramik_app/features/contractor/presentation/screens/contractor_profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class SramikApp extends StatelessWidget {
       ),
       routes: {
         '/workerHome': (context) => const WorkerHomeScreen(),
-        '/contractorHome': (context) => const ContractorHomeScreen(),
+        '/contractorHome': (context) => const ContractorProfileScreen(),
       },
       home: const SplashScreen(),
     );

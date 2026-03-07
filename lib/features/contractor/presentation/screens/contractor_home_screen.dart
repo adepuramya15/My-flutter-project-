@@ -1,222 +1,335 @@
 import 'package:flutter/material.dart';
 import 'package:sramik_app/core/constants/app_colors.dart';
+import 'worker_list_screen.dart';
 
-class ContractorHomeScreen extends StatelessWidget {
+class ContractorHomeScreen extends StatefulWidget {
   const ContractorHomeScreen({super.key});
 
   @override
+  State<ContractorHomeScreen> createState() => _ContractorHomeScreenState();
+}
+
+class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
+
+  final List<CategoryItem> categories = [
+
+    CategoryItem(
+      title: "Construction",
+      icon: Icons.construction,
+      subCategories: [
+        "Mason / Bricklayer",
+        "Carpenter / Woodworker",
+        "Plumber",
+        "Electrician",
+        "Painter",
+        "Welder",
+        "Steel Fixer",
+        "Tile Worker",
+      ],
+    ),
+
+    CategoryItem(
+      title: "Household",
+      icon: Icons.home_repair_service,
+      subCategories: [
+        "Maid",
+        "Cook / Chef",
+        "Baby Care",
+        "Driver",
+        "Laundry Worker",
+      ],
+    ),
+
+    CategoryItem(
+      title: "Industrial & Factory",
+      icon: Icons.factory,
+      subCategories: [
+        "Machine Operator",
+        "Technician",
+        "Quality Inspector",
+        "Warehouse Staff",
+        "Loader",
+      ],
+    ),
+
+    CategoryItem(
+      title: "Security",
+      icon: Icons.security,
+      subCategories: [
+        "Security Guard",
+        "Night Watchman",
+        "Building Watchman",
+      ],
+    ),
+
+    CategoryItem(
+      title: "Transportation",
+      icon: Icons.local_shipping,
+      subCategories: [
+        "Delivery Boy",
+        "Driver",
+        "Helper",
+      ],
+    ),
+
+    CategoryItem(
+      title: "Hotel & Restaurant",
+      icon: Icons.restaurant,
+      subCategories: [
+        "Chef",
+        "Waiter",
+        "Cleaner",
+        "Kitchen Helper",
+      ],
+    ),
+  ];
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       backgroundColor: AppColors.background,
 
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        elevation: 0,
         title: const Text(
-          "Contractor Dashboard",
-          style: TextStyle(color: Colors.white),
+          "Categories",
+          style: TextStyle(color: AppColors.white),
         ),
-        centerTitle: true,
+        iconTheme: const IconThemeData(color: AppColors.white),
       ),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Post New Job Clicked")),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16),
+
+        child: GridView.builder(
+
+          itemCount: categories.length,
+
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.1,
+          ),
+
+          itemBuilder: (context, index) {
+
+            return CategoryCard(
+              category: categories[index],
+            );
+
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryItem {
+
+  final String title;
+  final IconData icon;
+  final List<String> subCategories;
+
+  CategoryItem({
+    required this.title,
+    required this.icon,
+    required this.subCategories,
+  });
+
+}
+
+class CategoryCard extends StatelessWidget {
+
+  final CategoryItem category;
+
+  const CategoryCard({super.key, required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+
+    return GestureDetector(
+
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const WorkerListScreen(),
+          ),
+        );
+
+      },
+
+      child: Container(
+
+        padding: const EdgeInsets.all(16),
+
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 6,
+            )
+          ],
+        ),
+
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(16),
+            Icon(
+              category.icon,
+              size: 40,
+              color: AppColors.primary,
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              category.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
               ),
-              child: Row(
-                children: const [
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.business, size: 30),
-                  ),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sharma Constructions",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        "Civil Contractor",
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            )
 
-            const SizedBox(height: 25),
-
-            const Text(
-              "Overview",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatCard("5", "Active Projects"),
-                _buildStatCard("18", "Workers Hired"),
-                _buildStatCard("₹ 50K", "Total Spent"),
-              ],
-            ),
-
-            const SizedBox(height: 30),
-
-            const Text(
-              "Recent Job Posts",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            _buildJobCard(
-                "Need 2 Electricians",
-                "Bangalore",
-                "₹ 900/day",
-                "Open"
-            ),
-            _buildJobCard(
-                "Plumbing Work",
-                "Mysore",
-                "₹ 750/day",
-                "Closed"
-            ),
           ],
         ),
       ),
     );
   }
+}
 
-  static Widget _buildStatCard(String value, String title) {
-    return Container(
-      width: 105,
-      padding: const EdgeInsets.symmetric(vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 6,
-          ),
-        ],
+class SubCategoryScreen extends StatefulWidget {
+
+  final CategoryItem category;
+
+  const SubCategoryScreen({super.key, required this.category});
+
+  @override
+  State<SubCategoryScreen> createState() => _SubCategoryScreenState();
+}
+
+class _SubCategoryScreenState extends State<SubCategoryScreen> {
+
+  String? selectedSubCategory;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+
+      backgroundColor: AppColors.background,
+
+      appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        title: Text(
+          widget.category.title,
+          style: const TextStyle(color: AppColors.white),
+        ),
+        iconTheme: const IconThemeData(color: AppColors.white),
       ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16),
+
+        child: SizedBox(
+          height: 45,
+          width: double.infinity,
+
+          child: ElevatedButton(
+
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+            ),
+
+            onPressed: selectedSubCategory == null
+                ? null
+                : () {
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Selected: $selectedSubCategory"),
+                ),
+              );
+
+            },
+
+            child: const Text(
+              "Continue",
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
+        ),
       ),
-    );
-  }
 
-  static Widget _buildJobCard(
-      String title,
-      String location,
-      String salary,
-      String status,
-      ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 6,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+      body: ListView.builder(
+
+        padding: const EdgeInsets.all(16),
+
+        itemCount: widget.category.subCategories.length,
+
+        itemBuilder: (context, index) {
+
+          final subCategory = widget.category.subCategories[index];
+          final isSelected = selectedSubCategory == subCategory;
+
+          return GestureDetector(
+
+            onTap: () {
+
+              setState(() {
+                selectedSubCategory = subCategory;
+              });
+
+            },
+
+            child: Container(
+
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 16,
+              ),
+
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+
+                border: Border.all(
+                  color: isSelected
+                      ? AppColors.primary
+                      : Colors.grey.shade300,
+                  width: 1.5,
                 ),
+
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 6,
+                  )
+                ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                location,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                salary,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                status,
+
+              child: Text(
+                subCategory,
                 style: TextStyle(
-                  color: status == "Open"
-                      ? Colors.green
-                      : Colors.red,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
+                  color: isSelected
+                      ? AppColors.primary
+                      : Colors.black,
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       ),
     );
   }

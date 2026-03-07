@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sramik_app/core/constants/app_colors.dart';
 import '../../../worker/presentation/screens/worker_home_screen.dart';
-import '../../../contractor/presentation/screens/contractor_home_screen.dart';
+import '../../../contractor/presentation/screens/contractor_profile_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String role;
@@ -95,7 +95,7 @@ class _OtpScreenState extends State<OtpScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (_) => const ContractorHomeScreen(),
+          builder: (_) => const ContractorProfileScreen(),
         ),
             (route) => false,
       );
