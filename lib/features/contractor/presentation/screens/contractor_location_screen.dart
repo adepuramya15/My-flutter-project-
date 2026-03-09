@@ -102,6 +102,14 @@ class _ContractorLocationScreenState extends State<ContractorLocationScreen> {
                   label: "Pincode",
                   controller: pincodeController,
                   keyboardType: TextInputType.number,
+                  customValidator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Required";
+                    } else if (!RegExp(r'^\d{6}$').hasMatch(value)) {
+                      return "Enter a valid 6-digit Pincode";
+                    }
+                    return null;
+                  },
                 ),
 
                 ProfileTextField(

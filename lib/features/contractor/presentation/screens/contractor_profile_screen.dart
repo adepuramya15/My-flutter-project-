@@ -12,7 +12,6 @@ class ContractorProfileScreen extends StatefulWidget {
 }
 
 class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
-
   final _formKey = GlobalKey<FormState>();
 
   final firstNameController = TextEditingController();
@@ -21,8 +20,18 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
   final whatsappController = TextEditingController();
   final experienceController = TextEditingController();
 
-  String? selectedLanguage;
+  String? selectedCategory;
+  final List<String> categories = [
+    "Construction",
+    "Household",
+    "Industrial & Factory",
+    "Security",
+    "Transportation",
+    "Hotel & Restaurant",
+    "Electrician & Electrical Work"
+  ];
 
+  String? selectedLanguage;
   final List<String> languages = [
     "English",
     "Hindi",
@@ -33,11 +42,8 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       backgroundColor: AppColors.background,
-
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         title: const Text(
@@ -45,18 +51,13 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
           style: TextStyle(color: AppColors.white),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16),
-
         child: SingleChildScrollView(
-
           child: Form(
             key: _formKey,
-
             child: Column(
               children: [
-
                 Stack(
                   children: [
                     const CircleAvatar(
@@ -68,7 +69,6 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                         color: AppColors.white,
                       ),
                     ),
-
                     Positioned(
                       bottom: 0,
                       right: 0,
@@ -90,49 +90,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                 ProfileTextField(
                   label: "First Name",
                   controller: firstNameController,
-                ),
-
-                ProfileTextField(
-                  label: "Last Name",
-                  controller: lastNameController,
-                ),
-
-                ProfileTextField(
-                  label: "Email (Optional)",
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  requiredField: false,
-                ),
-
-                ProfileTextField(
-                  label: "WhatsApp Number",
-                  controller: whatsappController,
-                  keyboardType: TextInputType.phone,
-                ),
-
-                DropdownButtonFormField<String>(
-
-                  decoration: InputDecoration(
-                    labelText: "Language Known",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-
-                  items: languages.map((lang) {
-                    return DropdownMenuItem(
-                      value: lang,
-                      child: Text(lang),
-                    );
-                  }).toList(),
-
-                  onChanged: (value) {
-                    setState(() {
-                      selectedLanguage = value;
-                    });
-                  },
-
-                  validator: (value) {
+                  customValidator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Required";
                     }
@@ -143,9 +101,108 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                 const SizedBox(height: 15),
 
                 ProfileTextField(
+                  label: "Last Name",
+                  controller: lastNameController,
+                  customValidator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Required";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                ProfileTextField(
+                  label: "Email (Optional)",
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  requiredField: false,
+                  customValidator: (value) => null,
+                ),
+
+                const SizedBox(height: 15),
+
+                ProfileTextField(
+                  label: "WhatsApp Number",
+                  controller: whatsappController,
+                  keyboardType: TextInputType.phone,
+                  customValidator: (value) {
+                    if (!RegExp(r'^\d{10}$').hasMatch(value ?? "")) {
+                      return "Enter a valid 10-digit number";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                DropdownButtonFormField<String>(
+                  initialValue: selectedCategory,
+                  decoration: InputDecoration(
+                    labelText: "Category",
+                    contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  items: categories.map((category) {
+                    return DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCategory = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) return "Required";
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                DropdownButtonFormField<String>(
+                  initialValue: selectedLanguage,
+                  decoration: InputDecoration(
+                    labelText: "Language Known",
+                    contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  items: languages.map((lang) {
+                    return DropdownMenuItem(
+                      value: lang,
+                      child: Text(lang),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedLanguage = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) return "Required";
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                ProfileTextField(
                   label: "Experience (Years)",
                   controller: experienceController,
                   keyboardType: TextInputType.number,
+                  customValidator: (value) {
+                    if (value == null || value.isEmpty) return "Required";
+                    return null;
+                  },
                 ),
 
                 const SizedBox(height: 25),
@@ -153,30 +210,21 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
 
                 SizedBox(
                   width: double.infinity,
-
                   child: ElevatedButton(
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-
                     onPressed: () {
-
-
                       if (_formKey.currentState!.validate()) {
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => const ContractorLocationScreen(),
                           ),
                         );
-
                       }
-
                     },
-
                     child: const Text(
                       "Next",
                       style: TextStyle(
@@ -185,8 +233,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                       ),
                     ),
                   ),
-                )
-
+                ),
               ],
             ),
           ),

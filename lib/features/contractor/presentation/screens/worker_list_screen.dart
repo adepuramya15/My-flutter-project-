@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sramik_app/core/constants/app_colors.dart';
+import 'worker_details_screen.dart';
+import 'package:sramik_app/core/widgets/invite_success_popup.dart';
 
 class WorkerListScreen extends StatelessWidget {
   const WorkerListScreen({super.key});
@@ -114,10 +116,13 @@ class WorkerListScreen extends StatelessWidget {
                             child: OutlinedButton(
                               onPressed: () {
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        "View details of ${worker["name"]}"),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => WorkerDetailsScreen(
+                                      worker: worker,
+                                      amenity: "Food",
+                                    ),
                                   ),
                                 );
 
@@ -125,23 +130,16 @@ class WorkerListScreen extends StatelessWidget {
                               child: const Text("View Details"),
                             ),
                           ),
-
                           const SizedBox(width: 10),
 
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
                               ),
                               onPressed: () {
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        "Invite sent to ${worker["name"]}"),
-                                  ),
-                                );
-
+                                showInviteSuccess(context, worker["name"]);
                               },
                               child: const Text("Invite"),
                             ),

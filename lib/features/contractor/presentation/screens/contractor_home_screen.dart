@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sramik_app/core/constants/app_colors.dart';
 import 'worker_list_screen.dart';
+import 'package:sramik_app/features/contractor/presentation/screens/find_workers_tab.dart';
+import 'profile_screen.dart';
 
 class ContractorHomeScreen extends StatefulWidget {
   const ContractorHomeScreen({super.key});
@@ -10,6 +12,8 @@ class ContractorHomeScreen extends StatefulWidget {
 }
 
 class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
+
+  int _currentIndex = 0;
 
   final List<CategoryItem> categories = [
 
@@ -82,46 +86,168 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
         "Kitchen Helper",
       ],
     ),
+    CategoryItem(
+      title: "Electrician & Electrical Work",
+      icon: Icons.restaurant,
+      subCategories: [
+        "Electrician",
+        "Panel Builder",
+        "Electronic Technician",
+        "Cable Assembler",
+        "Line Worker",
+      ],
+    ),
   ];
+
+  Widget _buildHomeScreen() {
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+
+      child: GridView.builder(
+
+        itemCount: categories.length,
+
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.1,
+        ),
+
+        itemBuilder: (context, index) {
+
+          final category = categories[index];
+
+          return GestureDetector(
+
+            onTap: () {
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SubCategoryScreen(category: category),
+                ),
+              );
+
+            },
+
+            child: Container(
+
+              padding: const EdgeInsets.all(16),
+
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 6,
+                  )
+                ],
+              ),
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  Icon(
+                    category.icon,
+                    size: 40,
+                    color: AppColors.primary,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    category.title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Widget> screens = [
+
+      _buildHomeScreen(),
+      const FindWorkersTab(),
+      const Center(child: Text("Projects")),
+      const Center(child: Text("Worker Requests")),
+      const ProfileScreen(),
+    ];
 
     return Scaffold(
 
       backgroundColor: AppColors.background,
 
-      appBar: AppBar(
+      appBar: _currentIndex == 0
+          ? AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.primary,
         title: const Text(
           "Categories",
           style: TextStyle(color: AppColors.white),
         ),
-        iconTheme: const IconThemeData(color: AppColors.white),
-      ),
+      )
+          : null,
 
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: screens[_currentIndex],
 
-        child: GridView.builder(
+      bottomNavigationBar: BottomNavigationBar(
 
-          itemCount: categories.length,
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
 
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.1,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: Colors.grey,
+
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+
+        items: const [
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
 
-          itemBuilder: (context, index) {
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "Find Workers",
+          ),
 
-            return CategoryCard(
-              category: categories[index],
-            );
+          BottomNavigationBarItem(
+            icon: Icon(Icons.work),
+            label: "Projects",
+          ),
 
-          },
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page),
+            label: "Requests",
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+
+        ],
       ),
     );
   }
@@ -138,71 +264,6 @@ class CategoryItem {
     required this.icon,
     required this.subCategories,
   });
-
-}
-
-class CategoryCard extends StatelessWidget {
-
-  final CategoryItem category;
-
-  const CategoryCard({super.key, required this.category});
-
-  @override
-  Widget build(BuildContext context) {
-
-    return GestureDetector(
-
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const WorkerListScreen(),
-          ),
-        );
-
-      },
-
-      child: Container(
-
-        padding: const EdgeInsets.all(16),
-
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade200,
-              blurRadius: 6,
-            )
-          ],
-        ),
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            Icon(
-              category.icon,
-              size: 40,
-              color: AppColors.primary,
-            ),
-
-            const SizedBox(height: 10),
-
-            Text(
-              category.title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-            )
-
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class SubCategoryScreen extends StatefulWidget {
@@ -253,9 +314,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 ? null
                 : () {
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Selected: $selectedSubCategory"),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const WorkerListScreen(),
                 ),
               );
 
@@ -283,11 +345,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
           return GestureDetector(
 
             onTap: () {
-
               setState(() {
                 selectedSubCategory = subCategory;
               });
-
             },
 
             child: Container(
