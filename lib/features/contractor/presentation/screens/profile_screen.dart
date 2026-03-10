@@ -11,10 +11,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   final Map<String, dynamic> user = {
-    "name": "Ramya Adepu",
+    "name": "Raju C",
     "id": "CTR12345",
     "whatsapp": "+91 9876543210",
-    "email": "ramya@email.com",
+    "email": "rajuc@email.com",
     "location": "Hyderabad"
   };
 
