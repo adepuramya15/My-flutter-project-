@@ -4,6 +4,8 @@ import 'worker_list_screen.dart';
 import 'package:sramik_app/features/contractor/presentation/screens/find_workers_tab.dart';
 import 'profile_screen.dart';
 import 'package:sramik_app/features/contractor/presentation/screens/projects_tab.dart';
+import 'package:sramik_app/features/contractor/presentation/screens/requests_tab.dart';
+
 
 class ContractorHomeScreen extends StatefulWidget {
   const ContractorHomeScreen({super.key});
@@ -186,7 +188,7 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
       _buildHomeScreen(),
       const FindWorkersTab(),
       const ProjectsTab(),
-      const Center(child: Text("Worker Requests")),
+      const RequestsTab(),
       const ProfileScreen(),
     ];
 

@@ -157,6 +157,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                     setState(() {
                       selectedCategory = value;
                     });
+                    _formKey.currentState?.validate();
                   },
                   validator: (value) {
                     if (value == null) return "Required";
@@ -186,6 +187,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                     setState(() {
                       selectedLanguage = value;
                     });
+                    _formKey.currentState?.validate();
                   },
                   validator: (value) {
                     if (value == null) return "Required";
