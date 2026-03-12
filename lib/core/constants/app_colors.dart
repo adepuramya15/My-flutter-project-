@@ -9,4 +9,3 @@ class AppColors {
   static const grey = Color(0xFF9CA3AF);
 }
 
-// 
